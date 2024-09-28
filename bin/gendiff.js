@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { program } from "commander";
-import parseFile from "../src/parseFile.js";
+import { program } from 'commander';
+import parseFile from '../src/parseFile.js';
 
 program
   .version('1.0.0')
@@ -9,7 +9,7 @@ program
   .option('-f, --format [type]', 'output format')
   .argument('<filepath1>')
   .argument('<filepath2>')
-  .action((file1, file2, options) => {
+  .action((file1, file2) => {
     const data1 = parseFile(file1);
     const data2 = parseFile(file2);
     console.log(data1);
