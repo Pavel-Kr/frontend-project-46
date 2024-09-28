@@ -1,9 +1,9 @@
-import genDiff from '../src/genDiff.js';
-import parseFile from '../src/parseFile.js';
 import fs from 'fs';
-import path from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { test, expect } from '@jest/globals';
+import parseFile from '../src/parseFile.js';
+import genDiff from '../src/genDiff.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
