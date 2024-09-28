@@ -9,3 +9,11 @@ lint:
 
 lint-fix:
 	npx eslint --fix .
+
+test:
+	npm run test
+
+coverage:
+	npx jest --coverage
+
+.PHONY: coverage
