@@ -7,13 +7,13 @@ program
   .version('1.0.0')
   .description('Compares two configuration files and shows a difference.')
   .helpOption('-h, --help', 'output usage information')
-  .option('-f, --format [type]', 'output format')
+  .option('-f, --format [type]', 'output format', 'stylish')
   .argument('<filepath1>')
   .argument('<filepath2>')
-  .action((file1, file2) => {
+  .action((file1, file2, options) => {
     const data1 = parseFile(file1);
     const data2 = parseFile(file2);
-    console.log(genDiff(data1, data2));
+    console.log(genDiff(data1, data2, options.format));
   });
 
 program.parse();

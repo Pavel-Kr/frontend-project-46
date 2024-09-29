@@ -16,4 +16,10 @@ Node.js is required for local installation. Once you install Node, run `make ins
 
 ## Demo
 
+### Plain structures
+
 [![asciicast](https://asciinema.org/a/nXZiTxh5yXC2hx3gphyaypHzF.svg)](https://asciinema.org/a/nXZiTxh5yXC2hx3gphyaypHzF)
+
+### Nested structures
+
+[![asciicast](https://asciinema.org/a/7xdlLb4E7KrFOHrOwfMMDNH3n.svg)](https://asciinema.org/a/7xdlLb4E7KrFOHrOwfMMDNH3n)
