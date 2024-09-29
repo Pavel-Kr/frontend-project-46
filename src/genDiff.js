@@ -7,17 +7,20 @@ const sortDiff = (diff) => {
   return _.fromPairs(sorted);
 };
 
+const getValueDiff = (value, value2) => {
+  if (typeof value === 'object' && typeof value2 === 'object') {
+    return { status: 'nested', value: buildDiff(value, value2) };
+  }
+  if (value === value2) {
+    return { status: 'unchanged', value };
+  }
+  return { status: 'changed', oldValue: value, newValue: value2 };
+};
+
 const buildDiff = (obj1, obj2) => {
   const diff = Object.entries(obj1).reduce((acc, [key, value]) => {
     if (Object.hasOwn(obj2, key)) {
-      const value2 = obj2[key];
-      if (typeof value === 'object' && typeof value2 === 'object') {
-        acc[key] = { status: 'nested', value: buildDiff(value, value2) };
-      } else if (value === value2) {
-        acc[key] = { status: 'unchanged', value };
-      } else {
-        acc[key] = { status: 'changed', oldValue: value, newValue: value2 };
-      }
+      acc[key] = getValueDiff(value, obj2[key]);
     } else {
       acc[key] = { status: 'deleted', value };
     }
