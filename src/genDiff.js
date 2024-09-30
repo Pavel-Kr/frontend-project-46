@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import getFormatter from './getFormatter.js';
+import getFormatter from './formatters/index.js';
 
 const sortDiff = (diff) => {
   const keyValuePairs = _.toPairs(diff);
@@ -42,6 +42,9 @@ const buildDiff = (obj1, obj2) => {
 const genDiff = (obj1, obj2, format = 'stylish') => {
   const diff = buildDiff(obj1, obj2);
   const formatter = getFormatter(format);
+  if (formatter === null) {
+    return `Incorrect format: ${format}`;
+  }
   return formatter(diff);
 };
 
