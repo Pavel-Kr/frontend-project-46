@@ -19,21 +19,21 @@ const getValueDiff = (value, value2, buildDiffCallback) => {
 };
 
 const buildDiff = (obj1, obj2) => {
-  const diff = Object.entries(obj1).reduce((acc, [key, value]) => {
+  const diff1 = Object.entries(obj1).map(([key, value]) => {
     if (Object.hasOwn(obj2, key)) {
-      acc[key] = getValueDiff(value, obj2[key], buildDiff);
-    } else {
-      acc[key] = { status: 'deleted', value };
+      return [key, getValueDiff(value, obj2[key], buildDiff)];
     }
-    return acc;
-  }, {});
+    return [key, { status: 'deleted', value }];
+  });
 
-  Object.entries(obj2).reduce((acc, [key, value]) => {
+  const diff2 = Object.entries(obj2).map(([key, value]) => {
     if (!Object.hasOwn(obj1, key)) {
-      acc[key] = { status: 'added', value };
+      return [key, { status: 'added', value }];
     }
-    return acc;
-  }, diff);
+    return null;
+  }).filter((entry) => entry !== null);
+
+  const diff = Object.fromEntries(diff1.concat(diff2));
 
   const sorted = sortDiff(diff);
 
