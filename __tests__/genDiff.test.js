@@ -39,6 +39,20 @@ test('gendiff plain YAML', () => {
   expect(genDiff(file1, file2, 'plain')).toEqual(expected);
 });
 
+test('gendiff json JSON', () => {
+  const file1 = parseFile(getFixturePath('file1.json'));
+  const file2 = parseFile(getFixturePath('file2.json'));
+  const expected = readFile(getFixturePath('expected.json'));
+  expect(genDiff(file1, file2, 'json')).toEqual(expected);
+});
+
+test('gendiff json YAML', () => {
+  const file1 = parseFile(getFixturePath('file1.yml'));
+  const file2 = parseFile(getFixturePath('file2.yml'));
+  const expected = readFile(getFixturePath('expected.json'));
+  expect(genDiff(file1, file2, 'json')).toEqual(expected);
+});
+
 test('incorrect format', () => {
   const file1 = parseFile(getFixturePath('file1.yml'));
   const file2 = parseFile(getFixturePath('file2.yml'));
