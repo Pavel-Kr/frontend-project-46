@@ -29,3 +29,7 @@ Node.js is required for local installation. Once you install Node, run `make ins
 ### Plain format
 
 [![asciicast](https://asciinema.org/a/9BkSM9mypXpah6JobK0SBMMrN.svg)](https://asciinema.org/a/9BkSM9mypXpah6JobK0SBMMrN)
+
+### JSON format
+
+[![asciicast](https://asciinema.org/a/Ms9qdG3S1LqYYpp67OikUxt0y.svg)](https://asciinema.org/a/Ms9qdG3S1LqYYpp67OikUxt0y)
