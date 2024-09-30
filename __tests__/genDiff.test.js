@@ -38,3 +38,10 @@ test('gendiff plain YAML', () => {
   const expected = readFile(getFixturePath('expectedPlain.txt'));
   expect(genDiff(file1, file2, 'plain')).toEqual(expected);
 });
+
+test('incorrect format', () => {
+  const file1 = parseFile(getFixturePath('file1.yml'));
+  const file2 = parseFile(getFixturePath('file2.yml'));
+  const expected = 'Incorrect format: error';
+  expect(genDiff(file1, file2, 'error')).toEqual(expected);
+});
