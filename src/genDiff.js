@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import parseFile from './parseFile.js';
 import getFormatter from './formatters/index.js';
 
 const sortDiff = (diff) => {
@@ -39,8 +40,10 @@ const buildDiff = (obj1, obj2) => {
   return sorted;
 };
 
-const genDiff = (obj1, obj2, format = 'stylish') => {
-  const diff = buildDiff(obj1, obj2);
+const genDiff = (filepath1, filepath2, format = 'stylish') => {
+  const data1 = parseFile(filepath1);
+  const data2 = parseFile(filepath2);
+  const diff = buildDiff(data1, data2);
   const formatter = getFormatter(format);
   if (formatter === null) {
     return `Incorrect format: ${format}`;
