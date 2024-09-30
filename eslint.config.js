@@ -44,12 +44,6 @@ export default [
       'import/no-named-as-default-member': 'off',
       'no-console': 'off',
       'import/no-extraneous-dependencies': 'off',
-      'no-use-before-define': ['error', {
-        functions: false,
-        classes: true,
-        variables: false,
-        allowNamedExports: false,
-      }],
     },
   },
 ];
