@@ -31,21 +31,25 @@ const stringify = (obj, depth) => {
   return convertEntriesToObjectString(keys, depth, false);
 };
 
-const stringifyDiff = (obj, depth = 0) => {
-  const keys = Object.entries(obj).flatMap(([key, data]) => {
-    switch (data.status) {
+const stringifyDiff = (diff, depth = 0) => {
+  const keys = diff.flatMap((data) => {
+    switch (data.type) {
       case 'changed':
         return [
-          `- ${key}: ${stringify(data.oldValue, depth + 1)}`,
-          `+ ${key}: ${stringify(data.newValue, depth + 1)}`,
+          `- ${data.key}: ${stringify(data.from, depth + 1)}`,
+          `+ ${data.key}: ${stringify(data.to, depth + 1)}`,
         ];
       case 'nested':
-        return `  ${key}: ${stringifyDiff(data.value, depth + 1)}`;
-      default:
-        return `${outputSign[data.status]} ${key}: ${stringify(
+        return `  ${data.key}: ${stringifyDiff(data.children, depth + 1)}`;
+      case 'unchanged':
+      case 'added':
+      case 'deleted':
+        return `${outputSign[data.type]} ${data.key}: ${stringify(
           data.value,
           depth + 1,
         )}`;
+      default:
+        throw new Error(`Invalid diff type: ${data.type}`);
     }
   });
   return convertEntriesToObjectString(keys, depth);

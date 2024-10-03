@@ -1,4 +1,4 @@
-const stringifyValue = (value) => {
+const stringify = (value) => {
   if (value === null) {
     return 'null';
   }
@@ -12,23 +12,25 @@ const stringifyValue = (value) => {
 };
 
 const stringifyDiff = (diff, ancestry) => {
-  const tokens = Object.entries(diff).map(([key, data]) => {
-    const newAncestry = `${ancestry}${key}`;
-    switch (data.status) {
+  const tokens = diff.map((data) => {
+    const newAncestry = `${ancestry}${data.key}`;
+    switch (data.type) {
       case 'added':
-        return `Property '${newAncestry}' was added with value: ${stringifyValue(data.value)}`;
+        return `Property '${newAncestry}' was added with value: ${stringify(data.value)}`;
       case 'deleted':
         return `Property '${newAncestry}' was removed`;
       case 'changed':
         return `Property '${newAncestry}' was updated. From ${
-          stringifyValue(data.oldValue)
-        } to ${stringifyValue(data.newValue)}`;
+          stringify(data.from)
+        } to ${stringify(data.to)}`;
       case 'nested':
-        return stringifyDiff(data.value, `${newAncestry}.`);
+        return stringifyDiff(data.children, `${newAncestry}.`);
+      case 'unchanged':
+        return null;
       default:
-        return '';
+        throw new Error(`Invalid diff type: ${data.type}`);
     }
-  }).filter((token) => token.length > 0);
+  }).filter((token) => token !== null);
   return tokens.join('\n');
 };
 

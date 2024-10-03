@@ -1,54 +1,56 @@
 import _ from 'lodash';
-import parseFile from './parseFile.js';
+import fs from 'fs';
+import { extname } from 'path';
+import parseData from './parseFile.js';
 import getFormatter from './formatters/index.js';
 
-const sortDiff = (diff) => {
-  const keyValuePairs = _.toPairs(diff);
-  const sorted = _.sortBy(keyValuePairs, ([key]) => key);
-  return _.fromPairs(sorted);
-};
+const sortDiff = (diff) => _.sortBy(diff, ({ key }) => key);
 
 const getValueDiff = (value, value2, buildDiffCallback) => {
   if (typeof value === 'object' && typeof value2 === 'object') {
-    return { status: 'nested', value: buildDiffCallback(value, value2) };
+    return { type: 'nested', children: buildDiffCallback(value, value2) };
   }
   if (value === value2) {
-    return { status: 'unchanged', value };
+    return { type: 'unchanged', value };
   }
-  return { status: 'changed', oldValue: value, newValue: value2 };
+  return { type: 'changed', from: value, to: value2 };
 };
 
 const buildDiff = (obj1, obj2) => {
-  const diff1 = Object.entries(obj1).map(([key, value]) => {
-    if (Object.hasOwn(obj2, key)) {
-      return [key, getValueDiff(value, obj2[key], buildDiff)];
+  const keys = _.union(Object.keys(obj1), Object.keys(obj2));
+  const diff = keys.map((key) => {
+    if (Object.hasOwn(obj1, key) && Object.hasOwn(obj2, key)) {
+      return { key, ...getValueDiff(obj1[key], obj2[key], buildDiff) };
+    } if (!Object.hasOwn(obj2, key)) {
+      return { key, type: 'deleted', value: obj1[key] };
     }
-    return [key, { status: 'deleted', value }];
+    return { key, type: 'added', value: obj2[key] };
   });
-
-  const diff2 = Object.entries(obj2).map(([key, value]) => {
-    if (!Object.hasOwn(obj1, key)) {
-      return [key, { status: 'added', value }];
-    }
-    return null;
-  }).filter((entry) => entry !== null);
-
-  const diff = Object.fromEntries(diff1.concat(diff2));
 
   const sorted = sortDiff(diff);
 
   return sorted;
 };
 
+const parseFile = (filepath) => {
+  const ext = extname(filepath).slice(1);
+  const data = String(fs.readFileSync(filepath));
+  return parseData(data, ext);
+};
+
 const genDiff = (filepath1, filepath2, format = 'stylish') => {
-  const data1 = parseFile(filepath1);
-  const data2 = parseFile(filepath2);
-  const diff = buildDiff(data1, data2);
-  const formatter = getFormatter(format);
-  if (formatter === null) {
-    return `Incorrect format: ${format}`;
+  try {
+    const data1 = parseFile(filepath1);
+    const data2 = parseFile(filepath2);
+    const diff = buildDiff(data1, data2);
+    const formatter = getFormatter(format);
+    if (formatter === null) {
+      throw new Error(`Incorrect format: ${format}`);
+    }
+    return formatter(diff);
+  } catch (e) {
+    return String(e);
   }
-  return formatter(diff);
 };
 
 export default genDiff;
