@@ -7,7 +7,10 @@ const getFormatter = (format) => {
     plain,
     json: JSON.stringify,
   };
-  return formatters[format] ?? null;
+  if (!Object.hasOwn(formatters, format)) {
+    throw new Error(`Incorrect format: ${format}`);
+  }
+  return formatters[format];
 };
 
 export default getFormatter;

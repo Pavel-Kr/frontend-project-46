@@ -21,8 +21,8 @@ const stringifyDiff = (diff, ancestry) => {
         return `Property '${newAncestry}' was removed`;
       case 'changed':
         return `Property '${newAncestry}' was updated. From ${
-          stringify(data.from)
-        } to ${stringify(data.to)}`;
+          stringify(data.value1)
+        } to ${stringify(data.value2)}`;
       case 'nested':
         return stringifyDiff(data.children, `${newAncestry}.`);
       case 'unchanged':

@@ -36,8 +36,8 @@ const stringifyDiff = (diff, depth = 0) => {
     switch (data.type) {
       case 'changed':
         return [
-          `- ${data.key}: ${stringify(data.from, depth + 1)}`,
-          `+ ${data.key}: ${stringify(data.to, depth + 1)}`,
+          `- ${data.key}: ${stringify(data.value1, depth + 1)}`,
+          `+ ${data.key}: ${stringify(data.value2, depth + 1)}`,
         ];
       case 'nested':
         return `  ${data.key}: ${stringifyDiff(data.children, depth + 1)}`;
